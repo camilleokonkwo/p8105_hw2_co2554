@@ -1,5 +1,20 @@
 ---
 title: "p8105_hw2_co2554 for Camille"
+author: Camille Okonkwo
+due date: 10/04/2023
 output: github_document
 ---
+
+# Problem 1
+
+```{r, setup}
+library(tidyverse)
+```
+
+Importing the pols-month csv file
+
+```{r}
+pols_month_df = read_csv(file = "./data/fivethirtyeight_datasets/pols-month.csv") |>
+  janitor::clean_names() 
+```
 
