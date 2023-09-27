@@ -10,6 +10,7 @@ output: github_document
 ```{r, setup}
 library(tidyverse)
 library(readxl)
+library(dplyr)
 ```
 
 Importing the pols-month csv file
@@ -20,8 +21,11 @@ pols_month_df =
   janitor::clean_names() |>
   separate(mon, into = c("year", "month", "day")) |>
   mutate(
-    month = month.abb[as.numeric(month)]
-    )
+    month = month.abb[as.numeric(month)], 
+    president = ifelse(prez_dem == 1, "dem", "gop")
+    ) |>
+  select(pols_month_df, -c("prez_dem", "prez_gop", "day")
+         )
   
 ```
 
