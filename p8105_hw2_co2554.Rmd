@@ -9,12 +9,26 @@ output: github_document
 
 ```{r, setup}
 library(tidyverse)
+library(readxl)
 ```
 
 Importing the pols-month csv file
 
 ```{r}
-pols_month_df = read_csv(file = "./data/fivethirtyeight_datasets/pols-month.csv") |>
-  janitor::clean_names() 
+pols_month_df = 
+  read_csv(file = "./data/fivethirtyeight_datasets/pols-month.csv") |>
+  janitor::clean_names() |>
+  separate(mon, into = c("year", "month", "day")) |>
+  mutate(
+    month = month.abb[as.numeric(month)]
+    )
+  
+```
+
+# Problem 2: Working with the Mr. Trashwheel Dataset
+
+```{r}
+trash_df =
+  read_excel("data/202207 Trash Wheel Collection Data.xlsx")
 ```
 
