@@ -18,7 +18,7 @@ library(janitor)
 
 ```{r}
 pols_month_df = 
-  read_csv("./data/fivethirtyeight_datasets/pols-month.csv") |>
+  read_csv("/data/fivethirtyeight_datasets/pols-month.csv") |>
   janitor::clean_names() |>
   separate(mon, into = c("year", "month", "day")) |>
   mutate(
@@ -35,7 +35,7 @@ pols_month_df =
 snp_df =
   read_csv("./data/fivethirtyeight_datasets/snp.csv") |>
   janitor::clean_names() |>
-  separate(date, into = c("month", "day", "year"), sep ="/") |>
+  separate(date, into = c("month", "day", "year"), sep ="-") |>
   mutate(
     year = as.integer(year) + 2000,
     month = month.abb[as.numeric(month)],
@@ -43,8 +43,6 @@ snp_df =
   ) |>
   select(-c("day")) |>
   arrange(year, month)
-
-
 ```
 
 
@@ -58,7 +56,7 @@ mr_trash_df =
   separate(date, into = c("year", "month", "day"), sep ="-") |>
   mutate(homes_powered = (weight_tons*500)/30, 
          month = month.abb[as.numeric(month)],
-         vessel = "mr."
+         trash_wheel = "Mister"
          )
 ```
 
@@ -70,7 +68,7 @@ prof_trash_df =
   separate(date, into = c("year", "month", "day"), sep ="-") |>
   mutate(homes_powered = (weight_tons*500)/30,
          month = month.abb[as.numeric(month)],
-         vessel = "professor"
+         trash_wheel = "Professor"
          )
 ```
 
@@ -82,18 +80,39 @@ cap_trash_df =
   separate(date, into = c("year", "month", "day"), sep ="-") |>
   mutate(homes_powered = (weight_tons*500)/30, 
          month = month.abb[as.numeric(month)],
-         vessel = "captain"
+         trash_wheel = "Captain"
          )
 ```
 
 ...and for the Gwynnda Trash Wheel Sheet. 
 ```{r}
 gwyn_trash_df =
-  readxl::read_excel("data/202207 Trash Wheel Collection Data.xlsx", sheet = "Gwynnda Trash Wheel", range = "A2:K27") |>
+  readxl::read_excel("data/202207 Trash Wheel Collection Data.xlsx", sheet = "Gwynnda Trash Wheel", range = "A2:J108") |>
   janitor::clean_names() |>
   separate(date, into = c("year", "month", "day"), sep ="-") |>
   mutate(homes_powered = (weight_tons*500)/30, 
          month = month.abb[as.numeric(month)],
-         vessel = "gwynnda"
+         trash_wheel = "Gwynnda"
          )
 ```
+
+Now, we can go ahead and combine all of the sheets into one dataframe. 
+```{r}
+vessels_df =
+  bind_rows(mr_trash_df, prof_trash_df, cap_trash_df, gwyn_trash_df) |>
+  janitor::clean_names()
+```
+
+The `vessels_df` dataset has `r vessels_df(nrow)`
+
+
+#Problem 3
+
+Importing the MCI_baseline csv file. 
+```{r}
+baseline_df =
+  read_csv("data/data_mci/MCI_baseline.csv") |>
+  janitor::clean_names()
+
+```
+
