@@ -11,28 +11,50 @@ output: github_document
 library(tidyverse)
 library(readxl)
 library(dplyr)
+library(janitor)
 ```
 
-Importing the pols-month csv file
+1.1: Importing the pols-month csv file, cleaning data, and manipulating variables
 
 ```{r}
 pols_month_df = 
-  read_csv(file = "./data/fivethirtyeight_datasets/pols-month.csv") |>
+  read_csv("./data/fivethirtyeight_datasets/pols-month.csv") |>
   janitor::clean_names() |>
   separate(mon, into = c("year", "month", "day")) |>
   mutate(
     month = month.abb[as.numeric(month)], 
     president = ifelse(prez_dem == 1, "dem", "gop")
     ) |>
-  select(pols_month_df, -c("prez_dem", "prez_gop", "day")
+  select(-c("prez_dem", "prez_gop", "day")
          )
-  
 ```
+
+1.2: Following a similar process for snp.csv file.
+
+```{r}
+snp_df =
+  read_csv("./data/fivethirtyeight_datasets/snp.csv") |>
+  janitor::clean_names() |>
+  separate(date, into = c("month", "day", "year"), sep ="/") |>
+  mutate(
+    year = as.integer(year) + 2000,
+    month = month.abb[as.numeric(month)],
+    day = as.integer(day)
+  ) |>
+  select(-c("day")) |>
+  arrange(year, month)
+
+
+```
+
 
 # Problem 2: Working with the Mr. Trashwheel Dataset
 
 ```{r}
 trash_df =
-  read_excel("data/202207 Trash Wheel Collection Data.xlsx")
+  read_excel("data/202207 Trash Wheel Collection Data.xlsx") |>
+  janitor::clean_names() 
+  
+  
 ```
 
