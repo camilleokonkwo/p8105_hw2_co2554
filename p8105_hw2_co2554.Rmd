@@ -17,16 +17,20 @@ library(janitor)
 1.1: Importing the pols-month csv file, cleaning data, and manipulating variables
 
 ```{r}
-pols_month_df = 
-  read_csv("/data/fivethirtyeight_datasets/pols-month.csv") |>
-  janitor::clean_names() |>
-  separate(mon, into = c("year", "month", "day")) |>
+month_df = 
+  tibble(
+    month_num = 1:12,
+    month_abb = month.abb,
+    month = month.name
+  )
+
+pols_df = 
+  read_csv("./data/fivethirtyeight_datasets/pols-month.csv") |>
+  separate(mon, into = c("year", "month_num", "day"), convert = TRUE) |>
   mutate(
-    month = month.abb[as.numeric(month)], 
-    president = ifelse(prez_dem == 1, "dem", "gop")
-    ) |>
-  select(-c("prez_dem", "prez_gop", "day")
-         )
+    president = recode(prez_gop, "0" = "dem", "1" = "gop", "2" = "gop")) |>
+  left_join(x = _, y = month_df) |> 
+  select(year, month, everything(), -day, -starts_with("prez")) 
 ```
 
 1.2: Following a similar process for snp.csv file.
@@ -35,14 +39,24 @@ pols_month_df =
 snp_df =
   read_csv("./data/fivethirtyeight_datasets/snp.csv") |>
   janitor::clean_names() |>
-  separate(date, into = c("month", "day", "year"), sep ="-") |>
-  mutate(
-    year = as.integer(year) + 2000,
-    month = month.abb[as.numeric(month)],
-    day = as.integer(day)
-  ) |>
-  select(-c("day")) |>
-  arrange(year, month)
+  separate(date, into = c("month", "day", "year"), convert = TRUE) |>
+  arrange(year, month) |>
+  mutate(month = month.name[month]) |>
+  select(year, month, close) 
+```
+
+1.3
+```{r}
+unemployment_df = 
+  read_csv("./data/fivethirtyeight_datasets/unemployment.csv") |>
+  rename(year = Year) |>
+  pivot_longer(
+    Jan:Dec, 
+    names_to = "month_abb",
+    values_to = "unemployment"
+  ) |> 
+  left_join(x = _, y = month_df) |> 
+  select(year, month, unemployment)
 ```
 
 
@@ -111,7 +125,7 @@ The `vessels_df` dataset has `r vessels_df(nrow)`
 Importing the MCI_baseline csv file. 
 ```{r}
 baseline_df =
-  read_csv("data/data_mci/MCI_baseline.csv") |>
+  read_csv("data/data_mci/MCI_baseline.csv", skip = 1 ) |>
   janitor::clean_names()
 
 ```
