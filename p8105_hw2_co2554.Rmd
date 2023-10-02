@@ -123,4 +123,6 @@ baseline_df =
   filter(age_at_onset != ".")
 ```
 
-To import the MCI_baseline csv, we had to remove the first row since in contained repeat informastion that's in our columns. The dataset lists participants in an Alzheimer's study which goal was to identify if particpants are carriers of the APOE4 gene, which is associated with increased risk of developing alzheimers. The MCI baseline study dataset shows t `r nrow(baseline_df)` participants and `r ncol(baseline_df)` variables. The education variable details 
+To import the MCI_baseline csv, we had to remove the first row since in contained repeat information that's in our columns. The data set lists participants in an Alzheimer's study which goal was to identify if participants are carriers of the `apoe4` gene, which is associated with increased risk of developing Alzheimer's. The MCI Baseline study had `r sum(baseline_df$id)` participants and `r ncol(baseline_df)` variables. The `education` variable details how many years of education each participant had at the start of the study. Of the `r sum(baseline_df$id)` participants, `r sum(baseline_df$apoe4 == "Carrier", na.rm = TRUE)` developed MCI. The average baseline age is `r mean(baseline_df$current_age)` years old. `r (sum(baseline_df$sex == "Female" & baseline_df$apoe4 == "Carrier", na.rm = TRUE))/ (sum(baseline_df$sex == "Female", na.rm = TRUE)) * 100`% of women in the study are APOE carriers.
+
+Now, let's import the dataset of longitudinally observed biomarker values.
