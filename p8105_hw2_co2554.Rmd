@@ -1,13 +1,13 @@
 ---
 title: "p8105_hw2_co2554 for Camille"
-author: Camille Okonkwo
-due date: 10/04/2023
+author: "Camille Okonkwo"
+due date: "10/04/2023"
 output: github_document
 ---
 
 # Problem 1
 
-```{r, setup}
+```{r setup, message = FALSE}
 library(tidyverse)
 library(readxl)
 library(janitor)
@@ -15,7 +15,7 @@ library(janitor)
 
 1.1: Importing the pols-month csv file, cleaning data, and manipulating variables
 
-```{r}
+```{r 1.1, message = FALSE}
 month_df = 
   tibble(
     month_num = 1:12,
@@ -34,7 +34,7 @@ pols_df =
 
 1.2: Following a similar process for snp.csv file.
 
-```{r}
+```{r 1.2, message = FALSE}
 snp_df =
   read_csv("./data/fivethirtyeight_datasets/snp.csv") |>
   janitor::clean_names() |>
@@ -45,7 +45,7 @@ snp_df =
 ```
 
 1.3
-```{r}
+```{r 1.3, message = FALSE}
 unemployment_df = 
   read_csv("./data/fivethirtyeight_datasets/unemployment.csv") |>
   rename(year = Year) |>
@@ -59,10 +59,12 @@ unemployment_df =
 ```
 
 
+
 # Problem 2: Working with the Mr. Trashwheel Dataset
 
 First, let's clean up the Mr. TrashWheel Sheet. 
-```{r, mr_trash_df}
+
+```{r mr_trash_df, message = FALSE}
 mr_trash_df =
   readxl::read_excel("data/202207 Trash Wheel Collection Data.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N549") |>
   janitor::clean_names() |>
@@ -74,7 +76,8 @@ mr_trash_df =
 ```
 
 Next, we'll follow the same steps for the Professor Trash Sheet. 
-```{r, prof_trash_df}
+
+```{r prof_trash_df, message = FALSE}
 prof_trash_df =
   readxl::read_excel("data/202207 Trash Wheel Collection Data.xlsx", sheet = "Professor Trash Wheel", range = "A2:M96") |>
   janitor::clean_names() |>
@@ -86,7 +89,8 @@ prof_trash_df =
 ```
 
 ...and for the Gwynnda Trash Wheel Sheet. 
-```{r}
+
+```{r gywn_trash_df, message = FALSE}
 gwyn_trash_df =
   readxl::read_excel("data/202207 Trash Wheel Collection Data.xlsx", sheet = "Gwynnda Trash Wheel", range = "A2:J108") |>
   janitor::clean_names() |>
@@ -98,22 +102,25 @@ gwyn_trash_df =
 ```
 
 Now, we can go ahead and combine all of the sheets into one dataframe. 
-```{r}
+
+```{r vessels_df, message = FALSE}
 vessels_df =
   bind_rows(mr_trash_df, prof_trash_df, gwyn_trash_df) 
 ```
 
 
-The Mr.Trashwheel merged dataset has `r nrow(vessels_df)` observations and `r ncol(vessels_df)` variables. This combined dataset tells us about how much trash Mr. Trashwheel, Professor Trashwheel, and Gwyndda Trashweel have picked up in each of their dumpsters between the years of `r range (vessels_df$year)[1]` to `r range (vessels_df$year)[2]`, as well as how many homes_powered. The unit of measurement for the merged dataset is in weight_tons and volume_cubic_yards, and the data set specifies how many/how much items were collected, such as plastic_bottles, polystyrene, cigarette_butts, and glass_bottles. The total weight of trash collected by Mr. Trashwheel was `r sum(mr_trash_df$weight_tons)` tons, with a volume of `r sum(mr_trash_df$volume_cubic_yards)` cubic yards. Professor Trashwheel collected a total of `r sum(prof_trash_df$weight_tons)` tons with a volume of `r sum(prof_trash_df$volume_cubic_yards)` cubic yards. Finally, Gwyndda Trash Wheel collected a total of `r sum(gwyn_trash_df$weight_tons)` tons and volume of `r sum(gwyn_trash_df$volume_cubic_yards)` cubic yards. 
+The Mr.Trashwheel merged dataset has `r nrow(vessels_df)` observations and `r ncol(vessels_df)` variables. This combined dataset tells us about how much trash Mr. Trashwheel, Professor Trashwheel, and Gwyndda Trashweel have picked up in each of their dumpsters between the years of `r range (vessels_df$year)[1]` to `r range (vessels_df$year)[2]`, as well as how many `homes_powered`. The unit of measurement for the merged dataset is in `weight_tons` and `volume_cubic_yards`, and the data set specifies how many/how much items were collected, such as `plastic_bottles`, `polystyrene`, `cigarette_butts`, and `glass_bottles`. The total weight of trash collected by Mr. Trashwheel was `r sum(mr_trash_df$weight_tons)` tons, with a volume of `r sum(mr_trash_df$volume_cubic_yards)` cubic yards. Professor Trashwheel collected a total of `r sum(prof_trash_df$weight_tons)` tons with a volume of `r sum(prof_trash_df$volume_cubic_yards)` cubic yards. Finally, Gwyndda Trash Wheel collected a total of `r sum(gwyn_trash_df$weight_tons)` tons and volume of `r sum(gwyn_trash_df$volume_cubic_yards)` cubic yards. 
 
 In July 2021, Gwyndda Trashwheel collected `r filter(gwyn_trash_df, month == "July", year == 2021) |> pull(cigarette_butts) |> sum()` cigarette butts. Mr. Trash Wheel Collected `r filter(mr_trash_df, month == "July", year == 2021) |> pull(cigarette_butts) |> sum()` cigarette butts. Professor Trashweel collected `r filter(prof_trash_df, month == "July", year == 2021) |> pull(cigarette_butts) |> sum()` cigarette butts, totaling `r filter(vessels_df, month == "July", year == 2021) |> pull(cigarette_butts) |> sum()` cigarette butts in July between all trashwheel vessels. July's total monthly cigarette butt collection is above the monthly average of  `r mean(vessels_df$cigarette_butts)` cigarette butts per month for all three trash vessels.
 
 Between `r range (vessels_df$year)[1]` and `r range (vessels_df$year)[2]`, Mr. Trashwheel, Professor Trashweel, and Glyndda Trashweel powered `r sum(vessels_df$homes_powered)` homes and collected `r sum(vessels_df$weight_tons)` tons of trash.
 
-#Problem 3
+
+
+# Problem 3: Working with the MCI observational study data
 
 Importing the MCI_baseline csv file. 
-```{r}
+```{r baseline_df, message = FALSE}
 baseline_df =
   read_csv("data/data_mci/MCI_baseline.csv", skip = 1 ) |>
   janitor::clean_names() |>
@@ -123,6 +130,35 @@ baseline_df =
   filter(age_at_onset != ".")
 ```
 
-To import the MCI_baseline csv, we had to remove the first row since in contained repeat information that's in our columns. The data set lists participants in an Alzheimer's study which goal was to identify if participants are carriers of the `apoe4` gene, which is associated with increased risk of developing Alzheimer's. The MCI Baseline study had `r sum(baseline_df$id)` participants and `r ncol(baseline_df)` variables. The `education` variable details how many years of education each participant had at the start of the study. Of the `r sum(baseline_df$id)` participants, `r sum(baseline_df$apoe4 == "Carrier", na.rm = TRUE)` developed MCI. The average baseline age is `r mean(baseline_df$current_age)` years old. `r (sum(baseline_df$sex == "Female" & baseline_df$apoe4 == "Carrier", na.rm = TRUE))/ (sum(baseline_df$sex == "Female", na.rm = TRUE)) * 100`% of women in the study are APOE carriers.
+(How do I count the participants?)
 
-Now, let's import the dataset of longitudinally observed biomarker values.
+To import the MCI_baseline csv, we had to remove the first row since in contained repeat information that's in our columns. The data set lists participants in an Alzheimer's study which goal was to identify if participants are carriers of the `apoe4` gene, which is associated with increased risk of developing Alzheimer's. The MCI Baseline study had `r sum(baseline_df$id)` participants and `r ncol(baseline_df)` variables. The `education` variable details how many years of education each participant had at the start of the study. Of the `r length(unique(baseline_df$id))` participants, `r sum(baseline_df$apoe4 == "Carrier", na.rm = TRUE)` developed MCI. The average baseline age is `r mean(baseline_df$current_age)` years old. `r (sum(baseline_df$sex == "Female" & baseline_df$apoe4 == "Carrier", na.rm = TRUE))/ (sum(baseline_df$sex == "Female", na.rm = TRUE)) * 100`% of women in the study are APOE carriers.
+
+
+Now, let's import and clean the data set of longitudinally observed biomarker values.
+
+```{r amyloid_df, message = FALSE}
+amyloid_df =
+  read_csv("data/data_mci/mci_amyloid.csv", skip = 1) |>
+  janitor::clean_names() |>
+  mutate(id = `study_id`) |>
+  select(-study_id)
+
+```
+
+It appears that all participants in `the baseline_df` are in `amyloid_df`, however id 472 to 495 are only in `amyloid_df`. 
+
+
+Joining `baseline_df` and `amyloid_df` to only include participants who appear in both.
+
+```{r MCI_df, message = FALSE}
+MCI_df =
+  inner_join(baseline_df, amyloid_df, by = "id")
+```
+
+Saving the combined dataset as a csv file
+
+```{r save_csv, message = FALSE}
+write.csv(MCI_df, file = "results/MCI_df.csv")
+```
+
