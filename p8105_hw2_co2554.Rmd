@@ -5,7 +5,7 @@ due date: "10/04/2023"
 output: github_document
 ---
 
-# Problem 1
+### Problem 1
 
 ```{r setup, message = FALSE}
 library(tidyverse)
@@ -60,13 +60,13 @@ unemployment_df =
 
 
 
-# Problem 2: Working with the Mr. Trashwheel Dataset
+### Problem 2: Working with the Mr. Trashwheel Dataset
 
 First, let's clean up the Mr. TrashWheel Sheet. 
 
 ```{r mr_trash_df, message = FALSE}
 mr_trash_df =
-  readxl::read_excel("data/202207 Trash Wheel Collection Data.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N549") |>
+  readxl::read_excel("data/202309 Trash Wheel Collection Data.xlsx", sheet = "Mr. Trash Wheel", range = "A2:N549") |>
   janitor::clean_names() |>
   separate(date, into = c("year", "month", "day"), convert = TRUE) |>
   mutate(homes_powered = (weight_tons*500)/30, 
@@ -79,7 +79,7 @@ Next, we'll follow the same steps for the Professor Trash Sheet.
 
 ```{r prof_trash_df, message = FALSE}
 prof_trash_df =
-  readxl::read_excel("data/202207 Trash Wheel Collection Data.xlsx", sheet = "Professor Trash Wheel", range = "A2:M96") |>
+  readxl::read_excel("data/202309 Trash Wheel Collection Data.xlsx", sheet = "Professor Trash Wheel", range = "A2:M96") |>
   janitor::clean_names() |>
   separate(date, into = c("year", "month", "day"), convert = TRUE) |>
   mutate(homes_powered = (weight_tons*500)/30,
@@ -92,7 +92,7 @@ prof_trash_df =
 
 ```{r gywn_trash_df, message = FALSE}
 gwyn_trash_df =
-  readxl::read_excel("data/202207 Trash Wheel Collection Data.xlsx", sheet = "Gwynnda Trash Wheel", range = "A2:J108") |>
+  readxl::read_excel("data/202309 Trash Wheel Collection Data.xlsx", sheet = "Gwynnda Trash Wheel", range = "A2:J108") |>
   janitor::clean_names() |>
   separate(date, into = c("year", "month", "day"), convert = TRUE) |>
   mutate(homes_powered = (weight_tons*500)/30, 
@@ -117,7 +117,7 @@ Between 2014 and `r range (vessels_df$year)[2]`, Mr. Trashwheel, Professor Trash
 
 
 
-# Problem 3: Working with the MCI observational study data
+### Problem 3: Working with the MCI observational study data
 
 Importing the MCI_baseline csv file. 
 ```{r baseline_df, message = FALSE}
